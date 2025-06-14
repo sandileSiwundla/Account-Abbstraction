@@ -16,12 +16,12 @@ async function main() {
 
     const [signer] = await hre.ethers.getSigners();
     const addr1 = await signer.getAddress();
-    console.log("Addr1 ", addr1);
+    // console.log("Addr1 ", addr1);
 
     const Account = await hre.ethers.getContractFactory("Account");
     
     const initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2);
-    console.log("init code", initCode);
+    // console.log("init code", initCode);
 
     let sender // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
     try {
@@ -34,7 +34,9 @@ async function main() {
     }
     console.log("Sender", sender);
 
-    console.log("Addr1", addr1);
+    // console.log("Addr1", addr1);
+
+    console.log("sender balance", await EntryPoint.balanceOf(sender));
 
 
 
@@ -51,18 +53,18 @@ async function main() {
         callGasLimit:400_000,
         verificationGasLimit: 400_000,
         preVerificationGas: 100_000,
-        maxFeePerGas: hre.ethers.parseEther("30","gwei"),
-        maxPriorityFeePerGas: hre.ethers.parseEther("30","gwei"),
+        maxFeePerGas: hre.ethers.parseUnits("30","gwei"), //changed to parseUnits line 56 & 57
+        maxPriorityFeePerGas: hre.ethers.parseUnits("30","gwei"),
         paymasterAndData: "0x",
         signature: "0x",
     }
-    console.log("userop", userOp);
+    // console.log("userop", userOp);
 
     const userOpHash = await EntryPoint.getUserOpHash(userOp);
-    console.log("user op hash", userOpHash);
+    // console.log("user op hash", userOpHash);
 
     const signature = await signer.signMessage(hre.ethers.getBytes(userOpHash));
-    console.log("signature", signature);
+    // console.log("signature", signature);
 
     userOp.signature = signature;
     // console.log("signature", signature);
