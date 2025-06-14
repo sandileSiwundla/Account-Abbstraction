@@ -81,10 +81,12 @@ async function main() {
     const txHash = await EntryPoint.handleOps([userOp], addr1); //was getting a FailedOp(0, "AA23 reverted: ECDSA: invalid signature length") so added signature line 64 & 67
     console.log("tx hash", txHash);
 
-    // const counting = await Account.interface.encodeFunctionData("counter");
-    // console.log(counting);
+    const deployedAccount = await hre.ethers.getContractAt("Account", sender);
 
-   
+
+    const count = await deployedAccount.count();
+    console.log("Count value in Account:", count.toString());
+
 }
 
 main().catch((error) => {
