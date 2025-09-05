@@ -32,6 +32,12 @@ async function main() {
     
         
     }
+    console.log("before sender balance", await EntryPoint.balanceOf(sender));
+
+    await EntryPoint.depositTo(sender, {
+        value: hre.ethers.parseEther("2"),
+    });
+    console.log("deposit was successful to", sender);
     console.log("Sender", sender);
 
     const code = await hre.ethers.provider.getCode(sender);
@@ -39,7 +45,7 @@ async function main() {
         initCode = "0x";
     }
 
-    console.log(await hre.ethers.provider.getCode(sender)); // check if deployed
+    // console.log(await hre.ethers.provider.getCode(sender)); // check if deployed
 
     // console.log("Addr1", addr1);
 
@@ -79,7 +85,7 @@ async function main() {
 
 
     const txHash = await EntryPoint.handleOps([userOp], addr1); //was getting a FailedOp(0, "AA23 reverted: ECDSA: invalid signature length") so added signature line 64 & 67
-    console.log("tx hash", txHash);
+    // console.log("tx hash", txHash);
 
     const deployedAccount = await hre.ethers.getContractAt("Account", sender);
 

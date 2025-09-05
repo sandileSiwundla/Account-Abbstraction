@@ -11,6 +11,7 @@ async function main() {
 
     const [signer] = await hre.ethers.getSigners();
     const addr1 = await signer.getAddress();
+    console.log(addr1)
 
     
     const initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2);
