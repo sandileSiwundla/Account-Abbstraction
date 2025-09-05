@@ -5,6 +5,7 @@ import "@account-abstraction/contracts/core/EntryPoint.sol";
 import "@account-abstraction/contracts/interfaces/IAccount.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
+import "./Counter.sol";
 
 // IAccount is needed as it's a standard way for smart accounts to verify and proccess userops
 // this smart account doesn't have an address
@@ -12,9 +13,12 @@ contract Account is IAccount {
     uint256 public count; // to debug
     address public owner;
 
-    constructor(address _owner) {
-        owner = _owner;
+
+    function counter() external {
+        count = Counter.increment(count);
     }
+
+    
 
     // Verifies that a user operation is valid and allowed by checking:
     // - The user's signature (to ensure the request is genuinely from them).
@@ -29,9 +33,7 @@ contract Account is IAccount {
         return owner == recovered ? 0 : 1;
     }
 
-    function counter() external {
-        count++;
-    }
+
 }
 
 // Create 1: hash (deployer(AF) + nonce)

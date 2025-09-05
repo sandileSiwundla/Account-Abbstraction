@@ -2,7 +2,7 @@
   "name": "hardhat-project",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.24.2"
+    "hardhat": "^2.26.3"
   },
   "dependencies": {
     "@account-abstraction/contracts": "^0.6.0",
