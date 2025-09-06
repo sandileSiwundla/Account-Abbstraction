@@ -14,18 +14,30 @@ async function main() {
     //     nonce: AF_NONCE});
     // console.log("Sender", sender);
 
-    const [signer] = await hre.ethers.getSigners();
+    const [signer, signer2] = await hre.ethers.getSigners();
     const addr1 = await signer.getAddress();
-    // console.log("Addr1 ", addr1);
+    const addr2 = await signer2.getAddress();
+    console.log(addr1.toString);
 
     const Account = await hre.ethers.getContractFactory("Account");
     
     let initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2);
+
+    let initCode2 = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr2]).slice(2);
     // console.log("init code", initCode);
 
     let sender // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
     try {
         await EntryPoint.getSenderAddress(initCode);
+    } catch (error) {
+        console.log(error.data);
+        sender = "0x" + error.data.data.slice(-40);
+    
+        
+    }
+    let client // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
+    try {
+        await EntryPoint.getSenderAddress(initCode2);
     } catch (error) {
         console.log(error.data);
         sender = "0x" + error.data.data.slice(-40);
@@ -44,6 +56,12 @@ async function main() {
     if (code !== "0x") {
         initCode = "0x";
     }
+     const code2 = await hre.ethers.provider.getCode(client);
+    if (code2 !== "0x") {
+        initCode2 = "0x";
+    }
+
+    
 
     // console.log(await hre.ethers.provider.getCode(sender)); // check if deployed
 
@@ -59,8 +77,8 @@ async function main() {
     // console.log("calldata", calldata);
 
     userOp = {
-        sender,
-        nonce : await EntryPoint.getNonce(sender, 0),
+        client,
+        nonce : await EntryPoint.getNonce(client, 0),
         initCode,
         callData: Account.interface.encodeFunctionData("counter"),
         callGasLimit:400_000,
