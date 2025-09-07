@@ -12,11 +12,20 @@ import "./Counter.sol";
 contract Account is IAccount {
     uint256 public count; // to debug
     address public owner;
+    string public returnee;
+
+    constructor(address _owner) {
+    owner = _owner;
+}
 
 
     function counter() external {
         count = Counter.increment(count);
     }
+
+    // function Returner() external{
+    //     returnee = Returner.name()
+    // }
 
     
 

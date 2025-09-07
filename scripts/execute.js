@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 
-const EP_address = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-const AF_address = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+const EP_address = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e"
+const AF_address = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0"
 
 AF_NONCE =2;
 
@@ -14,16 +14,16 @@ async function main() {
     //     nonce: AF_NONCE});
     // console.log("Sender", sender);
 
-    const [signer, signer2] = await hre.ethers.getSigners();
+    const [signer] = await hre.ethers.getSigners();
     const addr1 = await signer.getAddress();
-    const addr2 = await signer2.getAddress();
-    console.log(addr1.toString);
+    // const addr2 = await signer2.getAddress();
+    // console.log(addr1.toString);
 
     const Account = await hre.ethers.getContractFactory("Account");
     
     let initCode = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr1]).slice(2);
 
-    let initCode2 = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr2]).slice(2);
+    // let initCode2 = AF_address + AccountFactory.interface.encodeFunctionData("createAccount", [addr2]).slice(2);
     // console.log("init code", initCode);
 
     let sender // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
@@ -35,15 +35,13 @@ async function main() {
     
         
     }
-    let client // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
-    try {
-        await EntryPoint.getSenderAddress(initCode2);
-    } catch (error) {
-        console.log(error.data);
-        sender = "0x" + error.data.data.slice(-40);
+    // let client // was getting AA14 initCode must return sender so commented out line 13 to 15 and uncommented out  26 to 31
+    // try {
+    //     await EntryPoint.getSenderAddress(initCode2);
+    // } catch (error) {
+    //     console.log(error.data);
+    //     sender = "0x" + error.data.data.slice(-40);}
     
-        
-    }
     console.log("before sender balance", await EntryPoint.balanceOf(sender));
 
     await EntryPoint.depositTo(sender, {
@@ -56,10 +54,11 @@ async function main() {
     if (code !== "0x") {
         initCode = "0x";
     }
-     const code2 = await hre.ethers.provider.getCode(client);
-    if (code2 !== "0x") {
-        initCode2 = "0x";
-    }
+    //  const code2 = await hre.ethers.provider.getCode(client);
+    // if (code2 !== "0x") {
+    //     initCode2 = "0x";
+    // }
+    console.log(" A thing")
 
     
 
@@ -67,7 +66,6 @@ async function main() {
 
     // console.log("Addr1", addr1);
 
-    console.log("sender balance", await EntryPoint.balanceOf(sender));
 
 
 
@@ -77,8 +75,8 @@ async function main() {
     // console.log("calldata", calldata);
 
     userOp = {
-        client,
-        nonce : await EntryPoint.getNonce(client, 0),
+        sender,
+        nonce : await EntryPoint.getNonce(sender, 0),
         initCode,
         callData: Account.interface.encodeFunctionData("counter"),
         callGasLimit:400_000,
@@ -90,6 +88,8 @@ async function main() {
         signature: "0x",
     }
     // console.log("userop", userOp);
+    console.log(" A thing2")
+
 
     const userOpHash = await EntryPoint.getUserOpHash(userOp);
     // console.log("user op hash", userOpHash);
