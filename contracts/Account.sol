@@ -6,13 +6,15 @@ import "@account-abstraction/contracts/interfaces/IAccount.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "./Counter.sol";
+import "./Returner.sol";
 
 // IAccount is needed as it's a standard way for smart accounts to verify and proccess userops
 // this smart account doesn't have an address
-contract Account is IAccount {
+contract Account is IAccount, Maths {
     uint256 public count; // to debug
+    uint256 public answer;
     address public owner;
-    string public returnee;
+
 
     constructor(address _owner) {
     owner = _owner;
@@ -23,9 +25,14 @@ contract Account is IAccount {
         count = Counter.increment(count);
     }
 
-    // function Returner() external{
-    //     returnee = Returner.name()
-    // }
+    function CalculateAddition(uint256 a, uint256 b) external{
+        answer = Maths.Addition(a, b);
+    }
+
+    function CalculateMultiplication(uint256 a, uint256 b) external{
+        answer = Multiplication(a, b);
+    }
+
 
     
 
